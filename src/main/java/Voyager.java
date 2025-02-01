@@ -2,9 +2,11 @@ import java.util.Scanner;
 
 public class Voyager {
     private static int count = 0;
-    private static String[] list = new String[100];
+    private static Task[] tasks = new Task[100];
     private static final String LIST = "list";
     private static final String BYE = "bye";
+    private static final String MARK = "mark";
+    private static final String UNMARK = "unmark";
 
     public static void sayHi() {
         String backDrop =
@@ -56,19 +58,36 @@ public class Voyager {
         sayHi();
         while (true) {
             String input = listen();
-            switch(input) {
+            boolean mark = false;
+            switch(input.split(" ")[0]) {
                 case LIST:
                     System.out.println("Accessing my Digital Tape Recorder (DTR)...");
                     for (int i = 0; i < count; i++) {
-                        System.out.println(Integer.toBinaryString( (1 << 8) | i ).substring( 1 )+". "+list[i]);
+                        System.out.println(
+                                Integer.toBinaryString( (1 << 8) | i ).substring( 1 )
+                                        +". ["+tasks[i].getStatusIcon()+"] "
+                                        +tasks[i].description);
                     }
                     break;
                 case BYE:
                     sayBye();
                     return;
+                case MARK:
+                    mark = true;
+                case UNMARK:
+                    int idx = Integer.parseInt(input.split(" ")[1]);
+                    if (idx>=count) System.out.println("Operation invalid. Number not in list. Write in decimal.");
+                    else if (mark) {
+                        tasks[idx].setIsDone(true);
+                        System.out.println("Beep-boop. Marked task "+Integer.toBinaryString((1<<8) | idx).substring(1)+" as done.");
+                    } else {
+                        tasks[idx].setIsDone(false);
+                        System.out.println("Beeeeeeep. Unmarked task "+Integer.toBinaryString((1<<8) | idx).substring(1)+".");
+                    }
+                    break;
                 default:
                     System.out.println("Roger. Ground control requests for: "+input);
-                    list[count++] = input;
+                    tasks[count++] = new Task(input);
             };
         }
     }
