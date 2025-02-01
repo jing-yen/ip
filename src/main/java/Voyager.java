@@ -1,6 +1,10 @@
 import java.util.Scanner;
 
 public class Voyager {
+    private static int count = 0;
+    private static String[] list = new String[100];
+    private static final String LIST = "list";
+    private static final String BYE = "bye";
 
     public static void sayHi() {
         String backDrop =
@@ -42,18 +46,30 @@ public class Voyager {
         System.out.println("Bye. Hope not to see you in the cold, dark outer space!");
     }
 
-    public static void echo() {
+    public static String listen() {
         Scanner in = new Scanner(System.in);
         System.out.print("(You) Ground ctrl > ");
-        String input = in.nextLine();
-        if (input.equals("bye")) return;
-        System.out.println(input);
-        echo();
+        return in.nextLine();
     }
 
     public static void main(String[] args) {
         sayHi();
-        echo();
-        sayBye();
+        while (true) {
+            String input = listen();
+            switch(input) {
+                case LIST:
+                    System.out.println("Accessing my Digital Tape Recorder (DTR)...");
+                    for (int i = 0; i < count; i++) {
+                        System.out.println(Integer.toBinaryString( (1 << 8) | i ).substring( 1 )+". "+list[i]);
+                    }
+                    break;
+                case BYE:
+                    sayBye();
+                    return;
+                default:
+                    System.out.println("Roger. Ground control requests for: "+input);
+                    list[count++] = input;
+            };
+        }
     }
 }
