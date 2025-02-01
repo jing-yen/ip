@@ -33,5 +33,6 @@ public class Voyager {
 
         System.out.println(intro);
         System.out.println("Hello from Voyager:\n" + backDrop);
+        System.out.println("Bye. Hope not to see you in the cold, dark outer space!");
     }
 }
