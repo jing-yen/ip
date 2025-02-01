@@ -1,5 +1,8 @@
+import java.util.Scanner;
+
 public class Voyager {
-    public static void main(String[] args) {
+
+    public static void sayHi() {
         String backDrop =
                 """
                                  .       .                   .       .      .     .      .
@@ -32,7 +35,25 @@ public class Voyager {
                 """;
 
         System.out.println(intro);
-        System.out.println("Hello from Voyager:\n" + backDrop);
+        System.out.println("Hello from Voyager:\n" + backDrop + "\nWhat does my worldly companion request for?");
+    }
+
+    public static void sayBye() {
         System.out.println("Bye. Hope not to see you in the cold, dark outer space!");
+    }
+
+    public static void echo() {
+        Scanner in = new Scanner(System.in);
+        System.out.print("(You) Ground ctrl > ");
+        String input = in.nextLine();
+        if (input.equals("bye")) return;
+        System.out.println(input);
+        echo();
+    }
+
+    public static void main(String[] args) {
+        sayHi();
+        echo();
+        sayBye();
     }
 }
