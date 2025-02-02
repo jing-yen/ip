@@ -7,6 +7,9 @@ public class Voyager {
     private static final String BYE = "bye";
     private static final String MARK = "mark";
     private static final String UNMARK = "unmark";
+    private static final String TODO = "todo";
+    private static final String DEADLINE = "deadline";
+    private static final String EVENT = "event";
 
     public static void sayHi() {
         String backDrop =
@@ -48,6 +51,13 @@ public class Voyager {
         System.out.println("Bye. Hope not to see you in the cold, dark outer space!");
     }
 
+    public static void separator() {
+        String spaceArt =
+                "  *       .         *          .         *       .         *          .\n" +
+                        "      .       *         .         *       .         *         .       *\n";
+        System.out.println(spaceArt);
+    }
+
     public static String listen() {
         Scanner in = new Scanner(System.in);
         System.out.print("(You) Ground ctrl > ");
@@ -62,11 +72,11 @@ public class Voyager {
             switch(input.split(" ")[0]) {
                 case LIST:
                     System.out.println("Accessing my Digital Tape Recorder (DTR)...");
+                    if (count==0) System.out.println("My memory is empty.");
                     for (int i = 0; i < count; i++) {
                         System.out.println(
                                 Integer.toBinaryString( (1 << 8) | i ).substring( 1 )
-                                        +". ["+tasks[i].getStatusIcon()+"] "
-                                        +tasks[i].description);
+                                        +". "+tasks[i].toString());
                     }
                     break;
                 case BYE:
@@ -85,10 +95,34 @@ public class Voyager {
                         System.out.println("Beeeeeeep. Unmarked task "+Integer.toBinaryString((1<<8) | idx).substring(1)+".");
                     }
                     break;
+                case TODO:
+                    String desc = input.split(" ", 2)[1].trim();
+                    tasks[count++] = new Todo(desc);
+                    System.out.println("Roger. Ground control requests for Todo: ");
+                    System.out.println("  "+Integer.toBinaryString((1<<8) | count-1).substring(1)+". "+tasks[count-1].toString());
+                    System.out.println("My memory bank is "+(count)+"/100 full.");
+                    break;
+                case DEADLINE:
+                    desc = input.split(" ", 2)[1].split("/by")[0].trim();
+                    String date = input.split("/by")[1].trim();
+                    tasks[count++] = new Deadline(desc, date);
+                    System.out.println("Roger. Ground control requests for Deadline: ");
+                    System.out.println("  "+Integer.toBinaryString((1<<8) | count-1).substring(1)+". "+tasks[count-1].toString());
+                    System.out.println("My memory bank is "+(count)+"/100 full.");
+                    break;
+                case EVENT:
+                    desc = input.split(" ", 2)[1].split("/by")[0].trim();
+                    String from = input.split("/from", 2)[1].split("/to")[0].trim();
+                    String to = input.split("/to")[1];
+                    tasks[count++] = new Event(desc, from, to);
+                    System.out.println("Roger. Ground control requests for Event: "+desc+" from "+from+" to "+to);
+                    System.out.println("  "+Integer.toBinaryString((1<<8) | count-1).substring(1)+". "+tasks[count-1].toString());
+                    System.out.println("My memory bank is "+(count)+"/100 full.");
+                    break;
                 default:
-                    System.out.println("Roger. Ground control requests for: "+input);
-                    tasks[count++] = new Task(input);
+                    System.out.println("...... I cannot process.... this... request ......");
             };
+            separator();
         }
     }
 }
