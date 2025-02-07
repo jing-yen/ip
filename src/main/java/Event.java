@@ -7,7 +7,7 @@ public class Event extends Task {
         this.to = to;
     }
     public String toString() {
-        return "[D][" + (this.isDone?"done":"undone" + "]: ") + this.description + " { from: " + from + ", to: " + to + " }";
-
+        return "[D][" + (this.isDone?"done":"undone") + "]: { desc: "
+                + this.description + ", from: " + from + ", to: " + to + " }";
     }
 }

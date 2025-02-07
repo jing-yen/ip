@@ -6,6 +6,7 @@ public class Deadline extends Task {
     }
 
     public String toString() {
-        return "[D][" + (this.isDone?"done":"undone") + "]: " + this.description + "{ by: " + date + " }";
+        return "[D][" + (this.isDone?"done":"undone") + "]:  { desc: "
+                + this.description + ", by: " + date + " }";
     }
 }

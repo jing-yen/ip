@@ -3,6 +3,6 @@ public class Todo extends Task {
         super(description);
     }
     public String toString() {
-        return "[D][" + (this.isDone?"done":"undone" + "]: ") + this.description;
+        return "[D][" + (this.isDone?"done":"undone") + "]: { desc: " + this.description + " }";
     }
 }
