@@ -76,10 +76,9 @@ public class Voyager {
         }
     }
 
-    public static void mark(boolean isMark, int idx) {
+    public static void mark(boolean isMark, int idx) throws VoyagerIndexException {
         if (idx>=count) {
-            System.out.println("Operation invalid. Number not in list. Write in decimal.");
-            return;
+            throw new VoyagerIndexException();
         }
 
         String idxInBinary = Integer.toBinaryString((1 << 8) | idx).substring(1);
@@ -123,12 +122,11 @@ public class Voyager {
         }
     }
 
-    public static void main(String[] args) {
-        sayHi();
-        while (true) {
-            String input = listen();
-            boolean isMark = false;
+    private static void loop() {
+        String input = listen();
+        boolean isMark = false;
 
+        try {
             switch(input.split(" ")[0]) {
             case LIST:
                 list();
@@ -147,10 +145,24 @@ public class Voyager {
                 create(input);
                 break;
             default:
-                System.out.println("...... I cannot process.... this... request ......");
+                throw new VoyagerCommandException();
             }
+        } catch (VoyagerIndexException e) {
+            System.out.println("Error: Number not in list. Write in decimal.");
+        } catch (VoyagerCommandException e) {
+            System.out.println("Error ...... I cannot process.... this... request ......");
+        } catch (ArrayIndexOutOfBoundsException e) {
+            System.out.println("Error: Missing parameters after keyword: "+input.split(" ")[0]);
+        }
 
-            drawLine();
+        drawLine();
+    }
+
+    public static void main(String[] args) {
+        sayHi();
+
+        while (true) {
+            loop();
         }
     }
 }
