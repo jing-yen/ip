@@ -9,4 +9,7 @@ public class Deadline extends Task {
         return "[D][" + (this.isDone?"done":"undone") + "]:  { desc: "
                 + this.description + ", by: " + date + " }";
     }
+    public String toCommand() {
+        return "event " + description + " /by " + date;
+    }
 }
