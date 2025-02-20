@@ -1,3 +1,7 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Scanner;
 
 public class Voyager {
@@ -76,7 +80,7 @@ public class Voyager {
         }
     }
 
-    public static void mark(boolean isMark, int idx) throws VoyagerIndexException {
+    public static void mark(boolean isMark, int idx) throws VoyagerIndexException, IOException {
         if (idx>=count) {
             throw new VoyagerIndexException();
         }
@@ -91,9 +95,11 @@ public class Voyager {
         }
 
         System.out.println("  "+ idxInBinary +". "+tasks[count-1].toString());
+
+        writeToFile();
     }
 
-    public static void create(String input) {
+    public static void create(String input) throws IOException {
         switch (input.split(" ")[0]) {
         case TODO:
             String desc = input.split(" ", 2)[1].trim();
@@ -113,36 +119,65 @@ public class Voyager {
         case EVENT:
             desc = input.split(" ", 2)[1].split("/from")[0].trim();
             String from = input.split("/from", 2)[1].split("/to")[0].trim();
-            String to = input.split("/to")[1];
+            String to = input.split("/to ")[1];
             tasks[count++] = new Event(desc, from, to);
             System.out.println("Roger. Ground control requests for Event: ");
             System.out.println("  "+Integer.toBinaryString((1<<8) | count-1).substring(1)+". "+tasks[count-1].toString());
             System.out.println("My memory bank is "+(count)+"/100 full.");
             break;
         }
+
+        writeToFile();
     }
 
-    private static void loop() {
-        String input = listen();
+    public static void writeToFile() throws IOException {
+        FileWriter fw = new FileWriter("my-golden-disk.txt");
+        String text = "";
+        for (Task task: tasks) {
+            if (task !=null) text += (task.isDone?'/':'X') + task.toCommand() + System.lineSeparator();
+        }
+        fw.write(text);
+        fw.close();
+    }
+
+    public static void initializeFromFile() {
+        File f = new File("my-golden-disk.txt");
+        if (!f.exists()) return;
+
+        try {
+            Scanner s = null;
+            s = new Scanner(f);
+            while (s.hasNext()) {
+                String line = s.nextLine();
+                if (line.isEmpty()) continue;
+                process(line.substring(1), false);
+                if (line.charAt(0)=='/') mark(true, count-1);
+            }
+        } catch (Exception e) {
+            System.out.println("Error: I can't access my golden phonograph record...");
+        }
+    }
+
+    private static boolean process(String command, boolean shouldPrint) {
         boolean isMark = false;
 
         try {
-            switch(input.split(" ")[0]) {
+            switch(command.split(" ")[0]) {
             case LIST:
                 list();
                 break;
             case BYE:
                 sayBye();
-                return;
+                return false;
             case MARK:
                 isMark = true;
             case UNMARK:
-                mark(isMark, Integer.parseInt(input.split(" ")[1]));
+                mark(isMark, Integer.parseInt(command.split(" ")[1]));
                 break;
             case TODO:
             case EVENT:
             case DEADLINE:
-                create(input);
+                create(command);
                 break;
             default:
                 throw new VoyagerCommandException();
@@ -152,17 +187,22 @@ public class Voyager {
         } catch (VoyagerCommandException e) {
             System.out.println("Error ...... I cannot process.... this... request ......");
         } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Error: Missing parameters after keyword: "+input.split(" ")[0]);
+            System.out.println("Error: Missing parameters after keyword: "+command.split(" ")[0]);
+        } catch (IOException e) {
+            System.out.println("Error: I can't access my golden phonograph record...");
         }
 
         drawLine();
+        return true;
     }
 
     public static void main(String[] args) {
         sayHi();
+        initializeFromFile();
 
-        while (true) {
-            loop();
-        }
+        String input;
+        do {
+            input = listen();
+        } while (process(input, true));
     }
 }

@@ -5,4 +5,7 @@ public class Todo extends Task {
     public String toString() {
         return "[D][" + (this.isDone?"done":"undone") + "]: { desc: " + this.description + " }";
     }
+    public String toCommand() {
+        return "todo " + description;
+    }
 }

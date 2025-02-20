@@ -10,4 +10,7 @@ public class Event extends Task {
         return "[D][" + (this.isDone?"done":"undone") + "]: { desc: "
                 + this.description + ", from: " + from + ", to: " + to + " }";
     }
+    public String toCommand() {
+        return "event " + description + " /from " + from + " /to " + to;
+    }
 }
