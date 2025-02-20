@@ -1,8 +1,9 @@
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Voyager {
     private static int count = 0;
-    private static final Task[] tasks = new Task[100];
+    private static final ArrayList<Task> tasks = new ArrayList<>();
     private static final String LIST = "list";
     private static final String BYE = "bye";
     private static final String MARK = "mark";
@@ -10,6 +11,7 @@ public class Voyager {
     private static final String TODO = "todo";
     private static final String DEADLINE = "deadline";
     private static final String EVENT = "event";
+    private static final String DELETE = "delete";
     
     private static final String INTRO_GRAPHICS =
         """
@@ -72,7 +74,7 @@ public class Voyager {
         for (int i = 0; i < count; i++) {
             System.out.println(
                     Integer.toBinaryString( (1 << 8) | i ).substring( 1 )
-                            +". "+tasks[i].toString());
+                            +". "+ tasks.get(i).toString());
         }
     }
 
@@ -83,43 +85,53 @@ public class Voyager {
 
         String idxInBinary = Integer.toBinaryString((1 << 8) | idx).substring(1);
         if (isMark) {
-            tasks[idx].setIsDone(true);
+            tasks.get(idx).setIsDone(true);
             System.out.println("Beep-boop. Marked task "+ idxInBinary +" as done.");
         } else {
-            tasks[idx].setIsDone(false);
+            tasks.get(idx).setIsDone(false);
             System.out.println("Beeeeeeep. Unmarked task "+ idxInBinary +".");
         }
 
-        System.out.println("  "+ idxInBinary +". "+tasks[count-1].toString());
+        System.out.println("  "+ idxInBinary +". "+ tasks.get(count - 1).toString());
     }
 
     public static void create(String input) {
         switch (input.split(" ")[0]) {
         case TODO:
             String desc = input.split(" ", 2)[1].trim();
-            tasks[count++] = new Todo(desc);
+            tasks.set(count++, new Todo(desc));
             System.out.println("Roger. Ground control requests for Todo: ");
-            System.out.println("  "+Integer.toBinaryString((1<<8) | count-1).substring(1)+". "+tasks[count-1].toString());
+            System.out.println("  "+Integer.toBinaryString((1<<8) | count-1).substring(1)+". "+ tasks.get(count - 1).toString());
             System.out.println("My memory bank is "+(count)+"/100 full.");
             break;
         case DEADLINE:
             desc = input.split(" ", 2)[1].split("/by")[0].trim();
             String date = input.split("/by")[1].trim();
-            tasks[count++] = new Deadline(desc, date);
+            tasks.set(count++, new Deadline(desc, date));
             System.out.println("Roger. Ground control requests for Deadline: ");
-            System.out.println("  "+Integer.toBinaryString((1<<8) | count-1).substring(1)+". "+tasks[count-1].toString());
+            System.out.println("  "+Integer.toBinaryString((1<<8) | count-1).substring(1)+". "+ tasks.get(count - 1).toString());
             System.out.println("My memory bank is "+(count)+"/100 full.");
             break;
         case EVENT:
             desc = input.split(" ", 2)[1].split("/from")[0].trim();
             String from = input.split("/from", 2)[1].split("/to")[0].trim();
             String to = input.split("/to")[1];
-            tasks[count++] = new Event(desc, from, to);
+            tasks.set(count++, new Event(desc, from, to));
             System.out.println("Roger. Ground control requests for Event: ");
-            System.out.println("  "+Integer.toBinaryString((1<<8) | count-1).substring(1)+". "+tasks[count-1].toString());
+            System.out.println("  "+Integer.toBinaryString((1<<8) | count-1).substring(1)+". "+ tasks.get(count - 1).toString());
             System.out.println("My memory bank is "+(count)+"/100 full.");
             break;
         }
+    }
+
+    public static void delete(int idx) throws VoyagerIndexException {
+        if (idx>=count) {
+            throw new VoyagerIndexException();
+        }
+
+        tasks.remove(idx);
+        System.out.println("You have purged item "+(idx)+" from my memory bank.");
+        System.out.println("My memory bank is "+(count)+"/100 full.");
     }
 
     private static void loop() {
@@ -144,11 +156,14 @@ public class Voyager {
             case DEADLINE:
                 create(input);
                 break;
+            case DELETE:
+                delete(Integer.parseInt(input.split(" ")[1]));
+                break;
             default:
                 throw new VoyagerCommandException();
             }
         } catch (VoyagerIndexException e) {
-            System.out.println("Error: Number not in list. Write in decimal.");
+            System.out.println("Error: Number not in list. Remember to write in decimal.");
         } catch (VoyagerCommandException e) {
             System.out.println("Error ...... I cannot process.... this... request ......");
         } catch (ArrayIndexOutOfBoundsException e) {
