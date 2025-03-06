@@ -55,7 +55,7 @@ My memory bank is 1/100 full.
 
 **Command:** `deadline <description> /by <date/time>`
 
-**Description:** Adds a new deadline task with the given description and deadline date/time. Date/time should be in YYYY-MM-DD format.
+**Description:** Adds a new deadline task with the given description and deadline date/time.
 
 **Example:**
 ```
@@ -73,7 +73,7 @@ My memory bank is 2/100 full.
 
 **Command:** `event <description> /from <start date/time> /to <end date/time>`
 
-**Description:** Adds a new event task with the given description, start date/time, and end date/time. Date/time should be in YYYY-MM-DD format.
+**Description:** Adds a new event task with the given description, start date/time, and end date/time.
 
 **Example:**
 ```
@@ -166,7 +166,7 @@ bye
 
 **Expected Output:**
 ```
-Bye. Hope not to see you for tin the cold, dark outer space!
+Bye. Hope not to see you in the cold, dark outer space!
 ```
 
 ## Error Handling
