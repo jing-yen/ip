@@ -8,6 +8,10 @@ import task.Todo;
 
 import java.util.ArrayList;
 
+/**
+ * Manages a list of tasks.
+ * Provides methods to create, mark, unmark, delete, and list tasks.
+ */
 public class TaskList {
     private Ui ui = Ui.getInstance();
 
@@ -18,6 +22,12 @@ public class TaskList {
     private int count = 0;
     private final ArrayList<Task> tasks = new ArrayList<>();
 
+    /**
+     * Creates a new task and adds it to the task list.
+     *
+     * @param type  The type of task to create (TaskList.TODO, TaskList.DEADLINE, TaskList.EVENT).
+     * @param input Command string containing task description and parameters.
+     */
     public void create(int type, String input) {
         switch (type) {
             case TODO:
@@ -46,7 +56,14 @@ public class TaskList {
                 break;
         }
     }
-    
+
+    /**
+     * Marks or unmarks a task as done.
+     *
+     * @param isMark True to mark as done, false to unmark.
+     * @param idx    Index of the task to mark/unmark (0-indexed).
+     * @throws VoyagerException If the index is invalid.
+     */
     public void mark(boolean isMark, int idx) throws VoyagerException {
         if (idx>=count) {
             throw new VoyagerException(VoyagerException.Cause.INVALID_INDEX);
@@ -61,10 +78,17 @@ public class TaskList {
             ui.speak("Beeeeeeep. Unmarked task "+ idxInBinary +".");
         }
 
-        ui.speak("  "+ idxInBinary +". "+ tasks.get(count - 1).toString());
+        ui.speak("  "+ idxInBinary +". "+ tasks.get(idx).toString());
 
     }
 
+    /**
+     * Deletes a task from the task list.
+     *
+     * @param idx Index of the task to delete (0-indexed).
+     * @throws VoyagerException         If the index is invalid.
+     * @throws IndexOutOfBoundsException If the index is out of bounds.
+     */
     public void delete(int idx) throws VoyagerException, IndexOutOfBoundsException {
         if (idx>=count) {
             throw new VoyagerException(VoyagerException.Cause.INVALID_INDEX);
@@ -75,6 +99,11 @@ public class TaskList {
         ui.speak("My memory bank is "+(--count)+"/100 full.");
     }
 
+    /**
+     * Lists all tasks in the task list.
+     * Prints task index and task description for each task.
+     * If the task list is empty, prints a message indicating that.
+     */
     public void list() {
         ui.speak("Accessing my Digital Tape Recorder (DTR)...");
 
@@ -85,6 +114,11 @@ public class TaskList {
         }
     }
 
+    /**
+     * Returns all tasks in the task list.
+     *
+     * @return ArrayList of Task objects.
+     */
     public ArrayList<Task> getAllTasks() {
         return tasks;
     }
