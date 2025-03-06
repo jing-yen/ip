@@ -1,182 +1,172 @@
 # Voyager User Guide
 
-Your personal assistant in managing tasks for space exploration.
+Voyager is a command-line task management application designed for space exploration missions (but suitable for everything else!).  It helps you track tasks, deadlines, and events, keeping your mission on schedule.  Voyager is optimized for a Command Line Interface (CLI), providing efficiency for users comfortable with typing commands.
 
-![Voyager Screenshot](voyager_screenshot.png)
+## Quick Start
 
-Voyager is a command-line task management application designed to help you keep track of your tasks efficiently. Whether you are planning missions, managing resources, or scheduling events, Voyager is here to assist you.
+1.  **Prerequisites:** Ensure you have Java installed on your system.  (Preferably Java 17).
+2.  **Download:** Obtain the `Voyager.jar` file from the 'Releases' tab.
+3.  **Run:**
+    *   Open a command terminal (or command prompt).
+    *   Navigate to the directory where you saved `Voyager.jar` using the `cd` command (e.g., `cd Downloads`).
+    *   Execute Voyager using the command: `java -jar Voyager.jar`
+4.  **Interface:**  Voyager operates entirely within the command-line interface.  You'll see a prompt where you can enter commands.
 
-## Getting Started
+## Features
 
-To start using Voyager, simply run the `Voyager.jar` file. Once launched, Voyager will greet you and await your commands.
+:information_source: **Notes about the command format:**
 
-## Basic Commands
+*   Words in `UPPER_CASE` represent parameters you need to provide.
+*   Items in `[square brackets]` are optional.
+*    `<angled brackets>` show the expected type or format of data
+*   The `...` symbol means you can repeat the preceding element multiple times.
 
-Here are some basic commands to get you started:
+### Listing Tasks: `list`
 
-### 1. Listing Tasks
+Displays all tasks currently stored in Voyager's memory.
 
-**Command:** `list`
+*   **Format:** `list`
 
-**Description:** Displays all tasks currently stored in Voyager's memory.
+*   **Example Output:**
 
-**Example:**
-```
-list
-```
+    ```
+    Accessing my Digital Tape Recorder (DTR)...
+    00000000. [T][/]: { desc: todo read user guide }
+    00000001. [T][X]: { desc: go to school }
+    00000010. [D][X]: { desc: submit mission report, by: today }
+    ```
 
-**Expected Output:**
-```
-Accessing my Digital Tape Recorder (DTR)...
-1. [X] todo read user guide
-2. [/] deadline submit mission report /by 2024-08-20
-3. [X] event team meeting /from 2024-08-25 /to 2024-08-25
-```
+### Adding a Todo Task: `todo`
 
-### 2. Adding a Todo Task
+Adds a new todo task.
 
-**Command:** `todo <description>`
+*   **Format:** `todo DESCRIPTION`
 
-**Description:** Adds a new todo task with the given description.
+*   **Example:** `todo Prepare launch sequence documentation`
 
-**Example:**
-```
-todo read user guide
-```
+*   **Example Output:**
 
-**Expected Output:**
-```
-Roger. Ground control requests for Todo:
-  1. [X] read user guide
-My memory bank is 1/100 full.
-```
+    ```
+    Roger. Ground control requests for Todo:
+      00000000. [T][/]: { desc: Prepare launch sequence documentation }
+    My memory bank is 1/100 full.
+    ```
 
-### 3. Adding a Deadline Task
+### Adding a Deadline Task: `deadline`
 
-**Command:** `deadline <description> /by <date/time>`
+Adds a task with a deadline.
 
-**Description:** Adds a new deadline task with the given description and deadline date/time.
+*   **Format:** `deadline DESCRIPTION /by DEADLINE`
 
-**Example:**
-```
-deadline submit mission report /by 2024-08-20
-```
+*   **Example:** `deadline Submit fuel consumption report /by 2025-10-31`
 
-**Expected Output:**
-```
-Roger. Ground control requests for Deadline:
-  2. [ ] submit mission report (by: 2024-08-20)
-My memory bank is 2/100 full.
-```
+*   **Example Output:**
 
-### 4. Adding an Event Task
+    ```
+    Roger. Ground control requests for Deadline:
+      00000001. [D][/]: { desc: Submit fuel consumption report, by: 2025-10-31 }
+    My memory bank is 2/100 full.
+    ```
 
-**Command:** `event <description> /from <start date/time> /to <end date/time>`
+### Adding an Event Task: `event`
 
-**Description:** Adds a new event task with the given description, start date/time, and end date/time.
+Adds an event with a start and end date/time.
 
-**Example:**
-```
-event team meeting /from 2024-08-25 /to 2024-08-25
-```
+*   **Format:** `event DESCRIPTION /from START /to END`
 
-**Expected Output:**
-```
-Roger. Ground control requests for Event:
-  3. [ ] team meeting (from: 2024-08-25 to: 2024-08-25)
-My memory bank is 3/100 full.
-```
+*   **Example:** `event Solar panel alignment check /from 2025-11-15 /to 2025-11-15`
 
-### 5. Marking a Task as Done
+*   **Example Output:**
 
-**Command:** `mark <task index>`
+    ```
+    Roger. Ground control requests for Event:
+      00000010. [E][/]: { desc: Solar panel alignment check, from: 2024-11-15, to: 2024-11-15 }
+    My memory bank is 3/100 full.
+    ```
 
-**Description:** Marks the task at the given index as done. The index is the number shown in the `list` command output.
+### Marking a Task as Done: `mark`
 
-**Example:**
-```
-mark 1
-```
+Marks a task as completed.
 
-**Expected Output:**
-```
-Beep-boop. Marked task 1 as done.
-```
+*   **Format:** `mark TASK_INDEX`
 
-### 6. Unmarking a Task as Not Done
+*   **Example:** `mark 2`
 
-**Command:** `unmark <task index>`
+*   **Example Output:**
 
-**Description:** Marks the task at the given index as not done.
+    ```
+    Beep-boop. Marked task 2 as done.
+    ```
 
-**Example:**
-```
-unmark 1
-```
+### Unmarking a Task as Not Done: `unmark`
 
-**Expected Output:**
-```
-Beep-boop. Unmarked task 1 as not done.
-```
+Reverts a completed task to an incomplete state.
 
-### 7. Deleting a Task
+*   **Format:** `unmark TASK_INDEX`
 
-**Command:** `delete <task index>`
+*   **Example:** `unmark 2`
 
-**Description:** Deletes the task at the given index.
+*   **Example Output:**
 
-**Example:**
-```
-delete 1
-```
+    ```
+    Beep-boop. Unmarked task 2 as not done.
+    ```
 
-**Expected Output:**
-```
-You have purged item 1 from my memory bank.
-My memory bank is 2/100 full.
-```
+### Deleting a Task: `delete`
 
-### 8. Finding Tasks
+Removes a task from Voyager's memory.
 
-**Command:** `find <keyword>`
+*   **Format:** `delete TASK_INDEX`
 
-**Description:** Finds tasks that contain the given keyword in their description.
+*   **Example:** `delete 1`
 
-**Example:**
-```
-find report
-```
+*   **Example Output:**
 
-**Expected Output:**
-```
-Here are the matching tasks in your list:
-2. [/] deadline submit mission report /by 2024-08-20
-```
+    ```
+    You have purged item 1 from my memory bank.
+    My memory bank is 2/100 full.
+    ```
 
-### 9. Exiting Voyager
+### Finding Tasks: `find`
 
-**Command:** `bye`
+Searches for tasks containing a specific keyword.
 
-**Description:** Terminates the Voyager application.
+*   **Format:** `find KEYWORD`
 
-**Example:**
-```
-bye
-```
+*   **Example:** `find navigation`
+*   **Example Output:**
 
-**Expected Output:**
-```
-Bye. Hope not to see you in the cold, dark outer space!
-```
+    ```
+    Here are the matching tasks in your list:
+      00000001. [D][/]: { desc: submit mission report, by: today }
+    ```
+
+### Exiting Voyager: `bye`
+
+Terminates the Voyager application.
+
+*   **Format:** `bye`
+
+*   **Example Output:**
+
+    ```
+    Bye. Hope not to see you in the cold, dark outer space!
+    ```
 
 ## Error Handling
 
-Voyager is designed to handle various user inputs and errors gracefully. If you encounter an issue, Voyager will provide informative messages to guide you. For example, entering an invalid command will result in an error message indicating that the command is not recognized.
+Voyager provides informative messages for invalid commands or errors.  For example, if you enter an unrecognized command, you will receive an error message indicating the command is not valid.
 
-## Contributing
+## Command Summary
 
-// Add contribution guidelines if applicable.
-
-## License
-
-// Add license information if applicable.
+| Action                | Format                                        |
+|-----------------------|-----------------------------------------------|
+| List Tasks            | `list`                                        |
+| Add Todo              | `todo DESCRIPTION`                            |
+| Add Deadline          | `deadline DESCRIPTION /by DEADLINE`           |
+| Add Event             | `event DESCRIPTION /from START /to END`        |
+| Mark Task as Done     | `mark TASK_INDEX`                             |
+| Unmark Task as Not Done | `unmark TASK_INDEX`                          |
+| Delete Task           | `delete TASK_INDEX`                           |
+| Find Tasks            | `find KEYWORD`                                |
+| Exit Voyager          | `bye`                                         |
