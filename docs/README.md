@@ -166,7 +166,7 @@ bye
 
 **Expected Output:**
 ```
-Bye. Hope not to see you in the cold, dark outer space!
+Bye. Hope not to see you for tin the cold, dark outer space!
 ```
 
 ## Error Handling
