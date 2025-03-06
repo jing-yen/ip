@@ -13,6 +13,7 @@ public class Parser {
     private static final String DEADLINE = "deadline";
     private static final String EVENT = "event";
     private static final String DELETE = "delete";
+    private static final String FIND = "find";
 
     public boolean parse(TaskList taskList, String... commands) {
         boolean isMark = false;
@@ -22,6 +23,14 @@ public class Parser {
                 String[] parts = command.split(" ", 2);
 
                 switch (parts[0]) {
+                    case FIND:
+                        ui.speak("Here are the matching tasks in your list:");
+                        taskList
+                                .getAllTasks()
+                                .stream()
+                                .filter(task -> task.getDescription().contains(parts[1]))
+                                .forEach(task -> ui.speak(task.toString()));
+                        break;
                     case LIST:
                         taskList.list();
                         break;

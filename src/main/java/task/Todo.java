@@ -8,7 +8,7 @@ public class Todo extends Task {
 
     @Override
     public String toString() {
-        return "[D][" + (this.isDone?"done":"undone") + "]: { desc: " + this.description + " }";
+        return "[D][" + getStatusIcon() + "]: { desc: " + this.description + " }";
     }
 
     @Override

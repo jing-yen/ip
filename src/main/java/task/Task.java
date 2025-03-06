@@ -13,6 +13,10 @@ public abstract class Task {
         return (isDone ? "/" : "X");
     }
 
+    public String getDescription() {
+        return description;
+    }
+
     public void setIsDone(boolean b) {
         isDone = b;
     }
