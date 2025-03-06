@@ -10,6 +10,6 @@ public class Deadline extends Task {
                 + this.description + ", by: " + date + " }";
     }
     public String toCommand() {
-        return "event " + description + " /by " + date;
+        return "deadline " + description + " /by " + date;
     }
 }

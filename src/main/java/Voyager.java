@@ -1,12 +1,12 @@
 import java.util.ArrayList;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
 public class Voyager {
     private static int count = 0;
+    private static boolean isSilent = false;
     private static final ArrayList<Task> tasks = new ArrayList<>();
     private static final String LIST = "list";
     private static final String BYE = "bye";
@@ -54,21 +54,21 @@ public class Voyager {
             """;
 
     public static void sayHi() {
-        System.out.println(INTRO_TEXT);
-        System.out.println("Hello from Voyager:\n" + INTRO_GRAPHICS + "\nWhat does my worldly companion request for?");
+        println(INTRO_TEXT);
+        println("Hello from Voyager:\n" + INTRO_GRAPHICS + "\nWhat does my worldly companion request for?");
     }
 
     public static void sayBye() {
-        System.out.println("Bye. Hope not to see you in the cold, dark outer space!");
+        println("Bye. Hope not to see you in the cold, dark outer space!");
     }
 
     public static void drawLine() {
-        System.out.println(spaceArt);
+        println(spaceArt);
     }
 
     public static String listen() {
         Scanner in = new Scanner(System.in);
-        System.out.print("(You) Ground ctrl > ");
+        print("(You) Ground ctrl > ");
         return in.nextLine();
     }
 
@@ -76,7 +76,7 @@ public class Voyager {
         System.out.println("Accessing my Digital Tape Recorder (DTR)...");
         if (count==0) System.out.println("My memory is empty.");
         for (int i = 0; i < count; i++) {
-            System.out.println(
+            println(
                     Integer.toBinaryString( (1 << 8) | i ).substring( 1 )
                             +". "+ tasks.get(i).toString());
         }
@@ -90,13 +90,13 @@ public class Voyager {
         String idxInBinary = Integer.toBinaryString((1 << 8) | idx).substring(1);
         if (isMark) {
             tasks.get(idx).setIsDone(true);
-            System.out.println("Beep-boop. Marked task "+ idxInBinary +" as done.");
+            println("Beep-boop. Marked task "+ idxInBinary +" as done.");
         } else {
             tasks.get(idx).setIsDone(false);
-            System.out.println("Beeeeeeep. Unmarked task "+ idxInBinary +".");
+            println("Beeeeeeep. Unmarked task "+ idxInBinary +".");
         }
 
-        System.out.println("  "+ idxInBinary +". "+ tasks.get(count - 1).toString());
+        println("  "+ idxInBinary +". "+ tasks.get(count - 1).toString());
 
         writeToFile();
     }
@@ -105,27 +105,27 @@ public class Voyager {
         switch (input.split(" ")[0]) {
         case TODO:
             String desc = input.split(" ", 2)[1].trim();
-            tasks.set(count++, new Todo(desc));
-            System.out.println("Roger. Ground control requests for Todo: ");
-            System.out.println("  "+Integer.toBinaryString((1<<8) | count-1).substring(1)+". "+ tasks.get(count - 1).toString());
-            System.out.println("My memory bank is "+(count)+"/100 full.");
+            tasks.add(count++, new Todo(desc));
+            println("Roger. Ground control requests for Todo: ");
+            println("  "+Integer.toBinaryString((1<<8) | count-1).substring(1)+". "+ tasks.get(count - 1).toString());
+            println("My memory bank is "+(count)+"/100 full.");
             break;
         case DEADLINE:
             desc = input.split(" ", 2)[1].split("/by")[0].trim();
             String date = input.split("/by")[1].trim();
-            tasks.set(count++, new Deadline(desc, date));
-            System.out.println("Roger. Ground control requests for Deadline: ");
-            System.out.println("  "+Integer.toBinaryString((1<<8) | count-1).substring(1)+". "+ tasks.get(count - 1).toString());
-            System.out.println("My memory bank is "+(count)+"/100 full.");
+            tasks.add(count++, new Deadline(desc, date));
+            println("Roger. Ground control requests for Deadline: ");
+            println("  "+Integer.toBinaryString((1<<8) | count-1).substring(1)+". "+ tasks.get(count - 1).toString());
+            println("My memory bank is "+(count)+"/100 full.");
             break;
         case EVENT:
             desc = input.split(" ", 2)[1].split("/from")[0].trim();
             String from = input.split("/from", 2)[1].split("/to")[0].trim();
             String to = input.split("/to ")[1];
-            tasks.set(count++, new Event(desc, from, to));
-            System.out.println("Roger. Ground control requests for Event: ");
-            System.out.println("  "+Integer.toBinaryString((1<<8) | count-1).substring(1)+". "+ tasks.get(count - 1).toString());
-            System.out.println("My memory bank is "+(count)+"/100 full.");
+            tasks.add(count++, new Event(desc, from, to));
+            println("Roger. Ground control requests for Event: ");
+            println("  "+Integer.toBinaryString((1<<8) | count-1).substring(1)+". "+ tasks.get(count - 1).toString());
+            println("My memory bank is "+(count)+"/100 full.");
             break;
         }
 
@@ -133,7 +133,7 @@ public class Voyager {
     }
 
     public static void writeToFile() throws IOException {
-        FileWriter fw = new FileWriter("my-golden-disk.txt");
+        FileWriter fw = new FileWriter("phonograph.txt");
         String text = "";
         for (Task task: tasks) {
             if (task !=null) text += (task.isDone?'/':'X') + task.toCommand() + System.lineSeparator();
@@ -143,7 +143,7 @@ public class Voyager {
     }
 
     public static void initializeFromFile() {
-        File f = new File("my-golden-disk.txt");
+        File f = new File("phonograph.txt");
         if (!f.exists()) return;
 
         try {
@@ -152,24 +152,27 @@ public class Voyager {
                 String line = s.nextLine();
                 if (line.isEmpty()) continue;
                 process(line.substring(1), false);
-                if (line.charAt(0)=='/') mark(true, count-1);
+                if (line.charAt(0)=='/') process("mark "+(count-1), false);
             }
         } catch (Exception e) {
-            System.out.println("Error: I can't access my golden phonograph record...");
+            println("Error: I can't access my golden phonograph record...");
         }
     }
 
-    public static void delete(int idx) throws VoyagerIndexException {
+    public static void delete(int idx) throws VoyagerIndexException, IOException {
         if (idx>=count) {
             throw new VoyagerIndexException();
         }
 
         tasks.remove(idx);
-        System.out.println("You have purged item "+(idx)+" from my memory bank.");
-        System.out.println("My memory bank is "+(count)+"/100 full.");
+        println("You have purged item "+(idx)+" from my memory bank.");
+        println("My memory bank is "+(--count)+"/100 full.");
+
+        writeToFile();
     }
 
     private static boolean process(String command, boolean shouldPrint) {
+        if (!shouldPrint) isSilent = true;
         boolean isMark = false;
 
         try {
@@ -197,17 +200,26 @@ public class Voyager {
                 throw new VoyagerCommandException();
             }
         } catch (VoyagerIndexException e) {
-            System.out.println("Error: Number not in list. Remember to write in decimal.");
+            println("Error: Number not in list. Remember to write in decimal.");
         } catch (VoyagerCommandException e) {
-            System.out.println("Error ...... I cannot process.... this... request ......");
+            println("Error ...... I cannot process.... this... request ......");
         } catch (ArrayIndexOutOfBoundsException e) {
-            System.out.println("Error: Missing parameters after keyword: "+command.split(" ")[0]);
+            println("Error: Missing parameters after keyword: "+command.split(" ")[0]);
         } catch (IOException e) {
-            System.out.println("Error: I can't access my golden phonograph record...");
+            println("Error: I can't access my golden phonograph record...");
         }
 
         drawLine();
+        isSilent = false;
         return true;
+    }
+
+    private static void println(String s) {
+        if (!isSilent) System.out.println(s);
+    }
+
+    private static void print(String s) {
+        if (!isSilent) System.out.print(s);
     }
 
     public static void main(String[] args) {
