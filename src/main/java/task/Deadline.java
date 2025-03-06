@@ -10,7 +10,7 @@ public class Deadline extends Task {
 
     @Override
     public String toString() {
-        return "[D][" + (this.isDone?"done":"undone") + "]:  { desc: "
+        return "[D][" + getStatusIcon() + "]:  { desc: "
                 + this.description + ", by: " + date + " }";
     }
 
