@@ -4,6 +4,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
 
+/**
+ * Voyager is a personal assistant chatbot that helps users manage tasks.
+ * It supports creating, listing, marking, unmarking, and deleting tasks.
+ * Tasks can be of type Todo, Deadline, or Event.
+ * Voyager persists tasks to a file named "phonograph.txt".
+ */
 public class Voyager {
     private static int count = 0;
     private static boolean isSilent = false;
@@ -47,31 +53,49 @@ public class Voyager {
         a message to any potential extraterrestrial life. Today, Voyager continues its journey
         into the unknown, a testament to human curiosity and the desire to explore.
         """;
-    
+
     private static final String spaceArt = """
               *       .         *          .         *       .         *          .
                   .       *         .         *       .         *         .       *
             """;
 
+    /**
+     * Prints the introductory message and Voyager graphics to the console.
+     */
     public static void sayHi() {
         println(INTRO_TEXT);
         println("Hello from Voyager:\n" + INTRO_GRAPHICS + "\nWhat does my worldly companion request for?");
     }
 
+    /**
+     * Prints the goodbye message to the console.
+     */
     public static void sayBye() {
         println("Bye. Hope not to see you in the cold, dark outer space!");
     }
 
+    /**
+     * Prints a decorative line to the console.
+     */
     public static void drawLine() {
         println(spaceArt);
     }
 
+    /**
+     * Reads user input from the console.
+     * @return The line of text entered by the user.
+     */
     public static String listen() {
         Scanner in = new Scanner(System.in);
         print("(You) Ground ctrl > ");
         return in.nextLine();
     }
 
+    /**
+     * Lists all tasks currently stored in Voyager's memory.
+     * If there are no tasks, it indicates that the memory is empty.
+     * Tasks are displayed with their index in binary format and their string representation.
+     */
     public static void list() {
         System.out.println("Accessing my Digital Tape Recorder (DTR)...");
         if (count==0) System.out.println("My memory is empty.");
@@ -82,6 +106,13 @@ public class Voyager {
         }
     }
 
+    /**
+     * Marks or unmarks a task as done based on the provided index and boolean flag.
+     * @param isMark True to mark the task as done, false to unmark.
+     * @param idx The index of the task to mark/unmark (0-based).
+     * @throws VoyagerIndexException If the provided index is out of bounds.
+     * @throws IOException If there is an error writing to the file.
+     */
     public static void mark(boolean isMark, int idx) throws VoyagerIndexException, IOException {
         if (idx>=count) {
             throw new VoyagerIndexException();
@@ -101,6 +132,12 @@ public class Voyager {
         writeToFile();
     }
 
+    /**
+     * Creates a new task based on the user input string.
+     * Task type is determined by the first word of the input (todo, deadline, event).
+     * @param input User input string containing the task command and details.
+     * @throws IOException If there is an error writing to the file.
+     */
     public static void create(String input) throws IOException {
         switch (input.split(" ")[0]) {
         case TODO:
@@ -132,6 +169,11 @@ public class Voyager {
         writeToFile();
     }
 
+    /**
+     * Writes the current list of tasks to the "phonograph.txt" file.
+     * Each task is saved in a command format that can be parsed later.
+     * @throws IOException If there is an error writing to the file.
+     */
     public static void writeToFile() throws IOException {
         FileWriter fw = new FileWriter("phonograph.txt");
         String text = "";
@@ -142,6 +184,11 @@ public class Voyager {
         fw.close();
     }
 
+    /**
+     * Initializes the task list from the "phonograph.txt" file at program startup.
+     * Reads each line from the file, parses it as a command, and adds the corresponding task to the list.
+     * If a task is marked as done in the file (indicated by '/'), it is marked as done after creation.
+     */
     public static void initializeFromFile() {
         File f = new File("phonograph.txt");
         if (!f.exists()) return;
@@ -159,6 +206,12 @@ public class Voyager {
         }
     }
 
+    /**
+     * Deletes a task from the task list based on its index.
+     * @param idx The index of the task to delete (0-based).
+     * @throws VoyagerIndexException If the provided index is out of bounds.
+     * @throws IOException If there is an error writing to the file.
+     */
     public static void delete(int idx) throws VoyagerIndexException, IOException {
         if (idx>=count) {
             throw new VoyagerIndexException();
@@ -171,6 +224,13 @@ public class Voyager {
         writeToFile();
     }
 
+    /**
+     * Processes user commands and performs corresponding actions.
+     * This is the main command processing logic of Voyager.
+     * @param command The command string entered by the user.
+     * @param shouldPrint A boolean flag to control whether to print output to the console.
+     * @return True if Voyager should continue processing commands, false if it should exit (e.g., on "bye" command).
+     */
     private static boolean process(String command, boolean shouldPrint) {
         if (!shouldPrint) isSilent = true;
         boolean isMark = false;
@@ -214,14 +274,27 @@ public class Voyager {
         return true;
     }
 
+    /**
+     * Prints a string to the console if Voyager is not in silent mode.
+     * @param s The string to print.
+     */
     private static void println(String s) {
         if (!isSilent) System.out.println(s);
     }
 
+    /**
+     * Prints a string to the console without a newline if Voyager is not in silent mode.
+     * @param s The string to print.
+     */
     private static void print(String s) {
         if (!isSilent) System.out.print(s);
     }
 
+    /**
+     * Main entry point of the Voyager application.
+     * Initializes Voyager, loads tasks from file, and starts the command processing loop.
+     * @param args Command line arguments (not used).
+     */
     public static void main(String[] args) {
         sayHi();
         initializeFromFile();
