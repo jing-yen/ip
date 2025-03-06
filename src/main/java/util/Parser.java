@@ -3,6 +3,8 @@ package util;
 import exception.VoyagerException;
 
 public class Parser {
+    private Ui ui = Ui.getInstance();
+
     private static final String LIST = "list";
     private static final String BYE = "bye";
     private static final String MARK = "mark";
@@ -16,9 +18,9 @@ public class Parser {
         boolean isMark = false;
 
         for (String command: commands) {
-            String[] parts = command.split(" ", 2);
-
             try {
+                String[] parts = command.split(" ", 2);
+
                 switch (parts[0]) {
                     case LIST:
                         taskList.list();
@@ -46,9 +48,9 @@ public class Parser {
                         throw new VoyagerException(VoyagerException.Cause.INVALID_COMMAND);
                 }
             } catch (VoyagerException e) {
-                System.out.println("Error: " + e.getMessage());
-            } catch (IndexOutOfBoundsException e) {
-                System.out.println("Error: Invalid parameter.");
+                ui.printException(e.getMessage());
+            } catch (ArrayIndexOutOfBoundsException e) {
+                ui.printException("Invalid parameter for command: " + command.split(" ")[0]);
             }
         }
         return true;

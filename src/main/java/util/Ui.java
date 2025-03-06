@@ -4,6 +4,15 @@ import java.util.Scanner;
 
 public class Ui {
 
+    private static Ui instance = null;
+
+    public static Ui getInstance() {
+        if (instance==null) {
+            instance = new Ui();
+        }
+        return instance;
+    }
+
     private boolean isSilent = false;
 
     private final String INTRO_GRAPHICS =
@@ -75,14 +84,18 @@ public class Ui {
     }
 
     public void printException(String s) {
-        System.out.println("Error..." + s);
+        speak("Error..." + s);
     }
 
-    private void speak(String s) {
+    public void speak(String s) {
         if (!isSilent) System.out.println(s);
     }
 
     private void speakWithoutNewline(String s) {
         if (!isSilent) System.out.print(s);
+    }
+
+    public void beSilent(boolean b) {
+        isSilent = b;
     }
 }

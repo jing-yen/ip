@@ -15,16 +15,18 @@ public class Voyager {
     private Parser parser;
 
     public Voyager(String filePath) {
-        ui = new Ui();
+        ui = Ui.getInstance();
         storage = new Storage(filePath);
         parser = new Parser();
         taskList = new TaskList();
 
+        ui.beSilent(true);
         try {
             parser.parse(taskList, storage.loadAsCommands());
         } catch (FileNotFoundException e) {
             ui.printException("File not found");
         }
+        ui.beSilent(false);
     }
 
     public void run() {
