@@ -2,6 +2,9 @@ package util;
 
 import exception.VoyagerException;
 
+/**
+ * Parses user commands and executes corresponding actions on the TaskList.
+ */
 public class Parser {
     private Ui ui = Ui.getInstance();
 
@@ -15,6 +18,13 @@ public class Parser {
     private static final String DELETE = "delete";
     private static final String FIND = "find";
 
+    /**
+     * Parses the given command and performs the corresponding action on the task list.
+     *
+     * @param taskList The TaskList to be modified.
+     * @param commands Array of command strings to parse and execute.
+     * @return True if the application should continue running, false if it should terminate (on "bye" command).
+     */
     public boolean parse(TaskList taskList, String... commands) {
         boolean isMark = false;
 

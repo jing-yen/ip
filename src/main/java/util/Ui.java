@@ -2,10 +2,19 @@ package util;
 
 import java.util.Scanner;
 
+/**
+ * Handles user interface interactions.
+ * Provides methods for printing messages, reading user input, and displaying graphics.
+ */
 public class Ui {
 
     private static Ui instance = null;
 
+    /**
+     * Returns the singleton instance of Ui.
+     *
+     * @return The Ui instance.
+     */
     public static Ui getInstance() {
         if (instance==null) {
             instance = new Ui();
@@ -26,7 +35,7 @@ public class Ui {
                         .       .    .//          \\ |  \\ /////////       .     .   .
                                     ||.    .    .| |  ///////// .     .
                     .    .         ||           | |//`,/////                .
-                            .       \\\\        ./ //  /  \\/   .
+                            .       \\\\        ./ //\\` '   ,_\\     .
                 .                    \\\\.___./ //\\` '   ,_\\     .     .
                         .           .     \\ //////\\ , /   \\                 .    .
                                         .    ///////// \\|  '  |    .
@@ -67,7 +76,7 @@ public class Ui {
     }
 
     /**
-     * Prints a decorative line to the console.
+     * Prints a decorative line separator to the console.
      */
     public void drawLine() {
         speak(spaceArt);
@@ -83,18 +92,39 @@ public class Ui {
         return in.nextLine();
     }
 
+    /**
+     * Prints an error message to the console.
+     *
+     * @param s The error message to print.
+     */
     public void printException(String s) {
         speak("Error..." + s);
     }
 
+    /**
+     * Prints a message to the console.
+     *
+     * @param s The message to print.
+     */
     public void speak(String s) {
         if (!isSilent) System.out.println(s);
     }
 
+    /**
+     * Prints a message to the console without a newline character at the end.
+     *
+     * @param s The message to print without a newline.
+     */
     private void speakWithoutNewline(String s) {
         if (!isSilent) System.out.print(s);
     }
 
+    /**
+     * Sets the silent mode of the UI.
+     * In silent mode, no messages are printed to the console.
+     *
+     * @param b True to enable silent mode, false to disable.
+     */
     public void beSilent(boolean b) {
         isSilent = b;
     }
