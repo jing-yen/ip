@@ -72,6 +72,8 @@ public class Parser {
                 ui.printException("Invalid parameter for command: " + command.split(" ")[0]);
             }
         }
+
+        ui.drawLine();
         return true;
     }
 }
